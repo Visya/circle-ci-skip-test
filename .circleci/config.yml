@@ -1,0 +1,38 @@
+
+version: 2
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:current
+  working_directory: ~/circle-ci-skip-test
+
+jobs:
+  install:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: npm install
+
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: npm test
+
+  echo:
+    <<: *defaults
+    steps:
+      - run: echo "Nothing to see here"
+
+workflows:
+  version: 2
+  my_workflow:
+    jobs:
+      - install
+      - test:
+          requires:
+            - install
+      - echo:
+          requires:
+            - test
+
